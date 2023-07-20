@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'chaitannyaa/maven-plus-docker'
+      image 'devopstraning1235/maven-plus-docker'
       args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
     }
   }
@@ -14,7 +14,7 @@ pipeline {
     }
     stage('Code Analysis with SonarQube') {
       environment {
-        SONAR_URL = "http://3.238.147.185:9000"
+        SONAR_URL = "http://192.168.29.144:9000"
       }
       steps {
         withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
@@ -24,7 +24,7 @@ pipeline {
     }
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "chaitannyaa/java_awesome-cicd:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "devopstraning1235/java_awesome-cicd:${BUILD_NUMBER}"
         REGISTRY_CREDENTIALS = credentials('dockerHub')
       }
       steps {
@@ -40,13 +40,13 @@ pipeline {
     stage('Update Deployment File') {
         environment {
             GIT_REPO_NAME = "Jenkins_ArgoCD_Sonarcube_Java_Webapp_K8s"
-            GIT_USER_NAME = "Chaitannyaa"
+            GIT_USER_NAME = "devops1235"
         }
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                 sh '''
-                    git config user.email "crmg26696@gmail.com"
-                    git config user.name "Chaitannyaa Gaikwad"
+                    git config user.email "devopstraing159@gmail.com"
+                    git config user.name "devops1235"
                     BUILD_NUMBER=${BUILD_NUMBER}
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" manifests/deployment.yml
                     git add manifests/deployment.yml
